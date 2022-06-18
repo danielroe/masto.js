@@ -22,10 +22,10 @@ export const login = async (config: MastoConfig): Promise<MastoClient> => {
 export * from '../decorators';
 export * from '../entities';
 export * from '../errors';
-// export * from '../http';
+export * from '../http';
 export * from '../repositories';
-// export * from '../serializers';
-// export * from '../ws';
+export * from '../serializers';
+export * from '../ws';
 export * from '../clients';
 export * from '../config';
 export * from '../paginator';

@@ -1,0 +1,6 @@
+{
+  "name": "masto/native",
+  "private": true,
+  "module": "../dist/native.mjs",
+  "types": "../dist/index.d.ts"
+}

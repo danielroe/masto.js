@@ -47,7 +47,7 @@ export class HttpNativeImpl extends BaseHttp implements Http {
       const response = await fetch(url, {
         method,
         headers,
-        body: body as string,
+        body: body as BodyInit,
       });
       const text = await response.text();
       const resContentType = this.getContentType(
@@ -60,7 +60,7 @@ export class HttpNativeImpl extends BaseHttp implements Http {
 
       return {
         headers: HttpNativeImpl.toHeaders(response.headers),
-        data: this.serializer.deserialize('application/json', text),
+        data: this.serializer.deserialize(resContentType, text),
       };
     } catch (e) {
       if (!(e instanceof Response)) {
@@ -86,12 +86,18 @@ export class HttpNativeImpl extends BaseHttp implements Http {
     headers.forEach((value, key) => {
       result[headerCase(key)] = value;
     });
-    return result;
+
+    return result as Headers;
   }
 
   private static hasBlob(formData: FormData): boolean {
     let hasBlob = false;
-    formData.forEach((v: string | Blob) => (hasBlob ||= v instanceof Blob));
+    [
+      ...formData
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        .values(),
+    ].forEach((v: string | Blob) => (hasBlob ||= v instanceof Blob));
     return hasBlob;
   }
 }
