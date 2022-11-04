@@ -29,15 +29,9 @@ export interface Event {
   payload: string;
 }
 
-export interface WsEvents extends Omit<EventEmitter<EventTypeMap>, 'on'> {
-  // readonly connect: () => Promise<WsEvents>;
-  readonly disconnect: () => void;
-  readonly on: <T extends EventType>(
-    name: T,
-    cb: (...data: EventTypeMap[T]) => void,
-  ) => void;
-}
-
-export interface Ws {
-  stream(path: string, params: unknown): Promise<WsEvents>;
+export interface EventTarget extends Omit<EventEmitter<EventTypeMap>, 'on'> {
+  connect(path: string, params?: unknown): Promise<this>;
+  disconnect(): void;
+  // eslint-disable-next-line prettier/prettier
+  on<T extends EventType>(name: T, cb: (...data: EventTypeMap[T]) => void): void;
 }

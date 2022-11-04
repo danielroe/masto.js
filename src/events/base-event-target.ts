@@ -1,18 +1,24 @@
+import EventEmitter from 'eventemitter3';
 import semver from 'semver';
 
 import { MastoConfig } from '../config';
 import { Serializer } from '../serializers';
-import { Ws, WsEvents } from './ws';
+import { EventTarget, EventTypeMap } from './event-target';
 
-export abstract class BaseWs implements Ws {
+export abstract class BaseEventTarget
+  extends EventEmitter<EventTypeMap>
+  implements EventTarget
+{
   protected abstract readonly baseUrl: string;
   protected abstract readonly config: MastoConfig;
   protected abstract readonly version: string;
   protected abstract readonly serializer: Serializer;
 
-  abstract stream(path: string, params: unknown): Promise<WsEvents>;
+  abstract connect(path: string, params: unknown): Promise<this>;
+  abstract disconnect(): void;
 
   private supportsSecureToken() {
+    console.log({ version: this.version, baseUrl: this.baseUrl });
     // Since v2.8.4, it is supported to pass access token with`Sec-Websocket-Protocol`
     // https://github.com/tootsuite/mastodon/pull/10818
     return (
@@ -37,7 +43,7 @@ export abstract class BaseWs implements Ws {
 
   createProtocols(protocols = []) {
     return this.supportsSecureToken() && this.config.accessToken != null
-      ? [this.config.accessToken, ...protocols]
+      ? [this.config.accessToken, 'wss', 'ws', 'ws+unix', ...protocols]
       : [];
   }
 }

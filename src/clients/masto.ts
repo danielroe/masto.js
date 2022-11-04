@@ -1,6 +1,7 @@
 import { MastoConfig } from '../config';
 import { version } from '../decorators';
 import { Results } from '../entities';
+import { EventTarget } from '../events';
 import { Http } from '../http';
 import { Paginator } from '../paginator';
 import {
@@ -31,13 +32,12 @@ import {
   ReportRepository,
   ScheduledStatusesRepository,
   StatusRepository,
-  StreamingWebsocketRepository,
+  StreamingRepository,
   SuggestionRepository,
   TimelinesRepository,
   TrendRepository,
 } from '../repositories';
 import { DefaultPaginationParams } from '../repository';
-import { Ws } from '../ws';
 import { MastoAdminClient } from './admin';
 
 export type SearchType = 'accounts' | 'hashtags' | 'statuses';
@@ -89,23 +89,16 @@ export class MastoClient {
   readonly timelines: TimelinesRepository;
   readonly trends: TrendRepository;
   readonly email: EmailRepository;
-
-  /** @deprecated Use masto.streaming.websocket instead */
-  readonly stream: StreamingWebsocketRepository;
-
-  readonly streaming: {
-    readonly webSocket: StreamingWebsocketRepository;
-    readonly serverSentEvents: StreamingWebsocketRepository;
-  };
+  readonly streaming: StreamingRepository;
 
   constructor(
     private readonly http: Http,
-    private readonly ws: Ws,
+    private readonly eventTarget: EventTarget,
     readonly version: string,
     private readonly config: MastoConfig,
   ) {
     this.admin = new MastoAdminClient(this.http, this.version);
-    this.stream = new StreamRepository(this.ws, this.version);
+    this.streaming = new StreamingRepository(this.eventTarget, this.version);
     this.accounts = new AccountRepository(this.http, this.version);
     this.announcements = new AnnouncementRepository(this.http, this.version);
     this.apps = new AppRepository(this.http, this.version);

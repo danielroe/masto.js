@@ -1,8 +1,11 @@
 import { version } from '../decorators';
-import { Ws, WsEvents } from '../ws';
+import { EventTarget } from '../events';
 
-export class StreamingWebsocketRepository {
-  constructor(private readonly ws: Ws, readonly version: string) {}
+export class StreamingRepository {
+  constructor(
+    private readonly eventTarget: EventTarget,
+    readonly version: string,
+  ) {}
 
   /**
    * Starting home timeline and notification streaming
@@ -10,8 +13,8 @@ export class StreamingWebsocketRepository {
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
   @version({ since: '0.0.0' })
-  streamUser(): Promise<WsEvents> {
-    return this.ws.stream('/api/v1/streaming', {
+  streamUser(): Promise<EventTarget> {
+    return this.eventTarget.connect('/api/v1/streaming', {
       stream: 'user',
     });
   }
@@ -22,8 +25,8 @@ export class StreamingWebsocketRepository {
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
   @version({ since: '0.0.0' })
-  streamPublicTimeline(): Promise<WsEvents> {
-    return this.ws.stream('/api/v1/streaming', {
+  streamPublicTimeline(): Promise<EventTarget> {
+    return this.eventTarget.connect('/api/v1/streaming', {
       stream: 'public',
     });
   }
@@ -34,8 +37,8 @@ export class StreamingWebsocketRepository {
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
   @version({ since: '0.0.0' })
-  streamCommunityTimeline(): Promise<WsEvents> {
-    return this.ws.stream('/api/v1/streaming', {
+  streamCommunityTimeline(): Promise<EventTarget> {
+    return this.eventTarget.connect('/api/v1/streaming', {
       stream: 'public:local',
     });
   }
@@ -46,8 +49,8 @@ export class StreamingWebsocketRepository {
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
   @version({ since: '0.0.0' })
-  streamRemotePublicTimeline(): Promise<WsEvents> {
-    return this.ws.stream('/api/v1/streaming', {
+  streamRemotePublicTimeline(): Promise<EventTarget> {
+    return this.eventTarget.connect('/api/v1/streaming', {
       stream: 'public:remote',
     });
   }
@@ -59,8 +62,8 @@ export class StreamingWebsocketRepository {
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
   @version({ since: '0.0.0' })
-  streamTagTimeline(id: string): Promise<WsEvents> {
-    return this.ws.stream('/api/v1/streaming', {
+  streamTagTimeline(id: string): Promise<EventTarget> {
+    return this.eventTarget.connect('/api/v1/streaming', {
       stream: 'hashtag',
       tag: id,
     });
@@ -73,8 +76,8 @@ export class StreamingWebsocketRepository {
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
   @version({ since: '0.0.0' })
-  streamLocalTagTimeline(id: string): Promise<WsEvents> {
-    return this.ws.stream('/api/v1/streaming', {
+  streamLocalTagTimeline(id: string): Promise<EventTarget> {
+    return this.eventTarget.connect('/api/v1/streaming', {
       stream: 'hashtag:local',
       tag: id,
     });
@@ -87,8 +90,8 @@ export class StreamingWebsocketRepository {
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
   @version({ since: '0.0.0' })
-  streamListTimeline(id: string): Promise<WsEvents> {
-    return this.ws.stream('/api/v1/streaming', {
+  streamListTimeline(id: string): Promise<EventTarget> {
+    return this.eventTarget.connect('/api/v1/streaming', {
       stream: 'list',
       list: id,
     });
@@ -100,8 +103,8 @@ export class StreamingWebsocketRepository {
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
   @version({ since: '0.0.0' })
-  streamDirectTimeline(): Promise<WsEvents> {
-    return this.ws.stream('/api/v1/streaming', {
+  streamDirectTimeline(): Promise<EventTarget> {
+    return this.eventTarget.connect('/api/v1/streaming', {
       stream: 'direct',
     });
   }

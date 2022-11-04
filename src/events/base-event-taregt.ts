@@ -1,7 +1,7 @@
 import { SerializerNodejsImpl } from '../serializers';
-import { BaseWs } from './base-ws';
+import { BaseEventTarget } from './base-event-target';
 
-class Test extends BaseWs {
+class Test extends BaseEventTarget {
   baseUrl = 'wss://mastodon.social';
   config = {
     url: 'https://mastodon.social',
@@ -10,9 +10,11 @@ class Test extends BaseWs {
   serializer = new SerializerNodejsImpl();
   version = '99.99.9';
   stream = jest.fn();
+  connect = jest.fn();
+  disconnect = jest.fn();
 }
 
-describe('BaseWs', () => {
+describe('BaseEventTarget', () => {
   it('resolves url', () => {
     const test = new Test();
     expect(test.resolveUrl('/api/v1/streaming/public')).toBe(

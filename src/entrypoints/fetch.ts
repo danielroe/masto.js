@@ -1,9 +1,9 @@
 import { MastoClient } from '../clients';
 import { MastoConfig } from '../config';
+import { EventTargetWebSocketNodejsImpl } from '../events';
 import { HttpNativeImpl } from '../http';
 import { InstanceRepository } from '../repositories';
 import { SerializerNativeImpl } from '../serializers';
-import { WsNodejsImpl } from '../ws';
 
 export const login = async (config: MastoConfig): Promise<MastoClient> => {
   if (!process.env.NODE_IGNORE_MASTO_WARNINGS) {
@@ -16,7 +16,7 @@ export const login = async (config: MastoConfig): Promise<MastoClient> => {
   const serializer = new SerializerNativeImpl();
   const http = new HttpNativeImpl(config, serializer);
   const instance = await new InstanceRepository(http, '1.0.0').fetch();
-  const ws = new WsNodejsImpl(
+  const ws = new EventTargetWebSocketNodejsImpl(
     instance.urls.streamingApi,
     instance.version,
     config,
@@ -32,7 +32,7 @@ export * from '../errors';
 export * from '../http';
 export * from '../repositories';
 export * from '../serializers';
-export * from '../ws';
+export * from '../events';
 export * from '../clients';
 export * from '../config';
 export * from '../paginator';
