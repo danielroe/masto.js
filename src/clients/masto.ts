@@ -31,7 +31,7 @@ import {
   ReportRepository,
   ScheduledStatusesRepository,
   StatusRepository,
-  StreamRepository,
+  StreamingWebsocketRepository,
   SuggestionRepository,
   TimelinesRepository,
   TrendRepository,
@@ -59,7 +59,6 @@ export interface SearchParams extends DefaultPaginationParams {
 
 export class MastoClient {
   readonly admin: MastoAdminClient;
-  readonly stream: StreamRepository;
   readonly accounts: AccountRepository;
   readonly announcements: AnnouncementRepository;
   readonly apps: AppRepository;
@@ -90,6 +89,14 @@ export class MastoClient {
   readonly timelines: TimelinesRepository;
   readonly trends: TrendRepository;
   readonly email: EmailRepository;
+
+  /** @deprecated Use masto.streaming.websocket instead */
+  readonly stream: StreamingWebsocketRepository;
+
+  readonly streaming: {
+    readonly webSocket: StreamingWebsocketRepository;
+    readonly serverSentEvents: StreamingWebsocketRepository;
+  };
 
   constructor(
     private readonly http: Http,

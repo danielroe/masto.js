@@ -1,7 +1,7 @@
 import { version } from '../decorators';
 import { Ws, WsEvents } from '../ws';
 
-export class StreamRepository {
+export class StreamingWebsocketRepository {
   constructor(private readonly ws: Ws, readonly version: string) {}
 
   /**

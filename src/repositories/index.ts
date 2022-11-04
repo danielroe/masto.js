@@ -1,5 +1,5 @@
 export * from './account-repository';
-export * from './stream-repository';
+export * from './streaming-websocket-repository';
 export * from './announcement-repository';
 export * from './app-repository';
 export * from './block-repository';
